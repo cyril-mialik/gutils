@@ -1,5 +1,33 @@
 use std::collections::HashMap;
 
+/// Return whether true or false if it's anagram or not.
+///
+/// # Examples
+///
+/// ```
+/// use gutils::string::is_anagram;
+///
+/// let answer = is_anagram("lol".to_string(), "llo".to_string());
+/// assert_eq!(answer, true);
+///
+/// let answer = is_anagram("hello".to_string(), "world".to_string());
+/// assert_eq!(answer, false);
+/// ```
+pub fn is_anagram(s1: String, s2: String) -> bool {
+    let mut hm = HashMap::new();
+
+    if s1.len() != s2.len() {
+        return false;
+    }
+
+    for n in 0..s1.len() {
+        *hm.entry(s1.get(n..n+1)).or_insert(0) += 1;
+        *hm.entry(s2.get(n..n+1)).or_insert(0) -= 1;
+    }
+
+    hm.into_values().max().unwrap() == 0
+}
+
 /// Return whether true or false if it's a match between pattern and string.
 ///
 /// # Examples
@@ -226,4 +254,17 @@ mod tests {
         let answer = check_inslusion("abbc".to_string(), "ppwwm".to_string());
         assert_eq!(answer, false);
     }
+
+    #[test]
+    fn test_is_anagram() {
+        let answer = is_anagram("abbc".to_string(), "bbca".to_string());
+        assert_eq!(answer, true);
+
+        let answer = is_anagram("abbca".to_string(), "dvvb".to_string());
+        assert_eq!(answer, false);
+
+        let answer = is_anagram("abb".to_string(), "abc".to_string());
+        assert_eq!(answer, false);
+    }
 }
+
