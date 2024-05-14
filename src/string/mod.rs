@@ -1,5 +1,61 @@
 use std::collections::HashMap;
 
+/// Return the longest palindrom substring.
+///
+/// # Examples
+///
+/// ```
+/// use gutils::string::logest_palindrome_substring;
+///
+/// let answer = logest_palindrome_substring("abcdcbaaerfqsfq".to_string());
+/// assert_eq!(answer, "abcdcba".to_string());
+///
+/// let answer = logest_palindrome_substring("abcded".to_string());
+/// assert_eq!(answer, "ded".to_string());
+/// ```
+pub fn logest_palindrome_substring(s: String) -> String {
+    let n = s.len();
+    let s: Vec<u8> = "^"
+        .bytes()
+        .chain(s.into_bytes())
+        .flat_map(|u| [u, b'#'])
+        .chain("$".bytes())
+        .collect();
+
+    let mut center = 2;
+    let mut right = 3;
+    let mut p = vec![0; 2 * n + 1];
+    let mut max_p = 1;
+    let mut max_p_idx = 2;
+
+    for i in 3..=2 * n {
+        if i < right {
+            p[i] = p[2 * center - i].min(right - 1);
+        }
+
+        while s[i + p[i] + 1] == s[i - p[i] - 1] {
+            p[i] += 1;
+        }
+
+        if i + p[i] > right {
+            center = i;
+            right = i + p[i];
+        }
+
+        if p[i] > max_p {
+            max_p= p[i];
+            max_p_idx = i;
+        }
+    }
+
+    s.into_iter()
+        .skip(max_p_idx - max_p + 1)
+        .take(2 * max_p - 1)
+        .filter(|u| *u != b'#')
+        .map(|u| u as char)
+        .collect()
+}
+
 /// Return whether true or false if it's anagram or not.
 ///
 /// # Examples
@@ -265,6 +321,15 @@ mod tests {
 
         let answer = is_anagram("abb".to_string(), "abc".to_string());
         assert_eq!(answer, false);
+    }
+
+    #[test]
+    fn test_logest_palindrome_substring() {
+        let answer = logest_palindrome_substring("abcdcbaaerfqsfq".to_string());
+        assert_eq!(answer, "abcdcba".to_string());
+
+        let answer = logest_palindrome_substring("abcded".to_string());
+        assert_eq!(answer, "ded".to_string());
     }
 }
 
