@@ -83,6 +83,33 @@ pub fn lenght_of_longest_non_repeatable_substring(s: String) -> i32 {
     len as i32
 }
 
+/// Return two indexes of target' sum
+///
+/// # Examples
+///
+/// ```
+/// use gutils::collections::two_sum;
+///
+/// let answer = two_sum(vec![1, 2, 3, 4], 5);
+/// assert_eq!(answer, vec![1, 2]);
+///
+/// let answer = two_sum(vec![1, 2, 3], 9);
+/// assert_eq!(answer, vec![]);
+/// ```
+pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
+    let mut hm = HashMap::with_capacity(nums.len());
+
+    for (idx, &num) in nums.iter().enumerate() {
+        if let Some(&val) = hm.get(&(target - num)) {
+            return vec![val, idx as i32];
+        } else {
+            hm.insert(num, idx as i32);
+        }
+    }
+
+    vec![]
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -115,5 +142,14 @@ mod tests {
 
         let answer = lenght_of_longest_non_repeatable_substring("a".to_string());
         assert_eq!(answer, 1);
+    }
+    
+    #[test]
+    fn test_two_sum() {
+        let answer = two_sum(vec![1, 2, 3, 5, 2], 7);
+        assert_eq!(answer, vec![1, 3]);
+
+        let answer = two_sum(vec![1, 2, 3, 5], 9);
+        assert_eq!(answer, vec![]);
     }
 }
