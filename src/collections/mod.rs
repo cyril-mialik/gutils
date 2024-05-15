@@ -1,4 +1,4 @@
-use std::{collections::HashSet, hash::Hash};
+use std::{collections::{HashMap, HashSet}, hash::Hash};
 
 /// Return whether true or false if it's a duplicate
 ///
@@ -54,6 +54,35 @@ pub fn find_duplicate<T: Eq + Hash + Copy>(list: Vec<T>) -> Option<T> {
     None
 } 
 
+/// Return length of the longest non-repeatable substring
+///
+/// # Examples
+///
+/// ```
+/// use gutils::collections::lenght_of_longest_non_repeatable_substring;
+///
+/// let answer = lenght_of_longest_non_repeatable_substring("abcda".to_string());
+/// assert_eq!(answer, 4);
+///
+/// let answer = lenght_of_longest_non_repeatable_substring("abc".to_string());
+/// assert_eq!(answer, 3);
+/// ```
+pub fn lenght_of_longest_non_repeatable_substring(s: String) -> i32 {
+    let mut hm = HashMap::new();
+    let mut len = 0;
+    let mut start = -1;
+
+    for (end, ch) in s.chars().enumerate() {
+        if let Some(i) = hm.insert(ch, end as i32) {
+            start = start.max(i);
+        }
+
+        len = len.max((end as i32) - start);
+    }
+
+    len as i32
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -74,5 +103,17 @@ mod tests {
 
         let answer = find_duplicate(vec![1, 2, 3, 3, 5]);
         assert_eq!(answer, Some(3));
+    }
+
+    #[test]
+    fn test_lenght_of_longest_non_repeatable_substring() {
+        let answer = lenght_of_longest_non_repeatable_substring("abcdeffeacb".to_string());
+        assert_eq!(answer, 6);
+
+        let answer = lenght_of_longest_non_repeatable_substring("".to_string());
+        assert_eq!(answer, 0);
+
+        let answer = lenght_of_longest_non_repeatable_substring("a".to_string());
+        assert_eq!(answer, 1);
     }
 }
