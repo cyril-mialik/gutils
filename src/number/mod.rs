@@ -94,6 +94,32 @@ pub fn find_missing_number(nums: Vec<i32>) -> i32 {
     (len * (len + 1) / 2) - nums.iter().sum::<i32>()
 }
 
+/// Return single number from a sequence.
+///
+/// # Examples
+///
+/// ```
+/// use gutils::number::find_single_number;
+///
+/// let answer = find_single_number(vec![1,1,2,2,3,3,4]);
+/// assert_eq!(answer, 4);
+///
+/// let answer = find_single_number(vec![1,1,2,2,3,4,4,3,5]);
+/// assert_eq!(answer, 5);
+///
+/// let answer = find_single_number(vec![1,1,2,2,3,3]);
+/// assert_eq!(answer, 0);
+/// ```
+pub fn find_single_number(nums: Vec<i32>) -> i32 {
+    let mut mask = 0;
+
+    for n in nums {
+        mask ^= n;
+    }
+
+    mask
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -183,5 +209,17 @@ mod tests {
 
         let answer = find_missing_number(vec![0,1,2,3,4,5]);
         assert_eq!(answer, 6);
+    }
+
+    #[test]
+    fn test_find_single_number() {
+        let answer = find_single_number(vec![1,1,2,2,3,3,4]);
+        assert_eq!(answer, 4);
+
+        let answer = find_single_number(vec![1,1,2,2,3,4,4,3,5]);
+        assert_eq!(answer, 5);
+
+        let answer = find_single_number(vec![1,1,2,2,3,3]);
+        assert_eq!(answer, 0);
     }
 }
