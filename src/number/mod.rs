@@ -72,6 +72,28 @@ pub fn is_even(x: u32) -> bool {
     x & 1 != 1
 }
 
+/// Return missing number from a sequence.
+///
+/// # Examples
+///
+/// ```
+/// use gutils::number::find_missing_number;
+///
+/// let answer = find_missing_number(vec![0,1,2,3,5]);
+/// assert_eq!(answer, 4);
+///
+/// let answer = find_missing_number(vec![0,1,2,3,4,6,7,8,9,10]);
+/// assert_eq!(answer, 5);
+///
+/// let answer = find_missing_number(vec![0,1,2,3,4,5]);
+/// assert_eq!(answer, 6);
+/// ```
+pub fn find_missing_number(nums: Vec<i32>) -> i32 {
+    let len = nums.len() as i32;
+
+    (len * (len + 1) / 2) - nums.iter().sum::<i32>()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -149,5 +171,17 @@ mod tests {
 
         let answer = is_even(20);
         assert_eq!(answer, true);
+    }
+
+    #[test]
+    fn test_find_missing_number() {
+        let answer = find_missing_number(vec![0,1,2,3,5]);
+        assert_eq!(answer, 4);
+
+        let answer = find_missing_number(vec![0,1,2,3,4,6,7,8,9,10]);
+        assert_eq!(answer, 5);
+
+        let answer = find_missing_number(vec![0,1,2,3,4,5]);
+        assert_eq!(answer, 6);
     }
 }
