@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::cmp::Ordering::{Less, Equal, Greater};
 
 /// Return the longest palindrom substring.
 ///
@@ -259,6 +260,36 @@ pub fn check_inslusion(s1: String, s2: String) -> bool {
     false
 }
 
+/// Return the desired index from the vector through binary search. 
+///
+/// # Examples
+///
+/// ```
+/// use gutils::string::binary_search;
+///
+/// let answer = binary_search(vec![1,2,3,4,5], 4);
+/// assert_eq!(answer, 3);
+///
+/// let answer = binary_search(vec![1,2,3,4,5], 6);
+/// assert_eq!(answer, -1);
+/// ```
+pub fn binary_search(nums: Vec<i32>, target: i32) -> i32 {
+    let (mut left, mut right) = (0_usize, nums.len());
+    let mut index;
+
+    while left < right {
+        index = (left + right) / 2;
+
+        match nums[index].cmp(&target) {
+            Less => left = index + 1,
+            Greater => right = index,
+            Equal => return index as i32,
+        }
+    }
+
+    -1
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -330,6 +361,15 @@ mod tests {
 
         let answer = logest_palindrome_substring("abcded".to_string());
         assert_eq!(answer, "ded".to_string());
+    }
+
+    #[test]
+    fn test_binary_search() {
+        let answer = binary_search(vec![1,2,3,4,5], 4);
+        assert_eq!(answer, 3);
+
+        let answer = binary_search(vec![1,2,3,4,5], 6);
+        assert_eq!(answer, -1);
     }
 }
 
