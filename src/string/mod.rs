@@ -290,6 +290,41 @@ pub fn binary_search(nums: Vec<i32>, target: i32) -> i32 {
     -1
 }
 
+/// Check whether parentheses are valid or not.
+///
+/// # Examples
+///
+/// ```
+/// use gutils::collections::is_valid_parentheses;
+///
+/// let answer = is_valid_parentheses("({[]})".to_string());
+/// assert_eq!(answer, true);
+///
+/// let answer = is_valid_parentheses("{{[]})".to_string());
+/// assert_eq!(answer, false);
+/// ```
+pub fn is_valid_parentheses(s: String) -> bool {
+    if s.is_empty() && s.len() & 1 == 1 {
+        return false;
+    }
+
+    let mut v = Vec::with_capacity(s.len());
+
+    for c in s.chars() {
+        match c {
+            '(' | '{' | '[' => v.push(c),
+            _ => match v.pop() {
+                Some('(') if c == ')' => (),
+                Some('{') if c == '}' => (),
+                Some('[') if c == ']' => (),
+                _ => return false,
+            },
+        }
+    }
+
+    true
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -370,6 +405,15 @@ mod tests {
 
         let answer = binary_search(vec![1,2,3,4,5], 6);
         assert_eq!(answer, -1);
+    }
+
+    #[test]
+    fn test_is_valid_parentheses() {
+        let answer = is_valid_parentheses("({[]})".to_string());
+        assert_eq!(answer, true);
+
+        let answer = is_valid_parentheses("{{[]})".to_string());
+        assert_eq!(answer, false);
     }
 }
 
