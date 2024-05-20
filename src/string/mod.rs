@@ -295,7 +295,7 @@ pub fn binary_search(nums: Vec<i32>, target: i32) -> i32 {
 /// # Examples
 ///
 /// ```
-/// use gutils::collections::is_valid_parentheses;
+/// use gutils::string::is_valid_parentheses;
 ///
 /// let answer = is_valid_parentheses("({[]})".to_string());
 /// assert_eq!(answer, true);
@@ -323,6 +323,65 @@ pub fn is_valid_parentheses(s: String) -> bool {
     }
 
     true
+}
+
+/// Encode a vector of string into encoded string
+///
+/// # Examples
+///
+/// ```
+/// use gutils::string::encode;
+///
+/// let answer = encode(vec!["kek", "lol", "lil", "pip"]);
+/// assert_eq!(answer, String::from("3#kek3#lol3#lil3#pip"));
+///
+/// let answer = encode(vec![""]);
+/// assert_eq!(answer, String::from("0#"));
+/// ```
+pub fn encode(input: Vec<&str>) -> String {
+    let mut result = String::from("");
+
+    for s in input {
+        result += format!("{}#{}", s.len(), s).as_str();
+    }
+
+    result
+}
+
+/// Decode a string into a vector of string
+///
+/// # Examples
+///
+/// ```
+/// use gutils::string::decode;
+///
+/// let mock_value = String::from("3#lol3#kek3#pip");
+/// let answer = decode(&mock_value);
+/// assert_eq!(answer, vec!["lol", "kek", "pip"]);
+///
+/// let mock_value = String::from("0#");
+/// let answer = decode(&mock_value);
+/// assert_eq!(answer, vec![""]);
+/// ```
+pub fn decode<'a>(input: &'a String ) -> Vec<&'a str> {
+    let mut result = vec![];
+    let mut counter = 0;
+
+    while counter < input.len() {
+        let mut subcounter = counter;
+
+        while &input[subcounter..=subcounter] != "#" {
+            subcounter += 1;
+        }
+
+        let word_size: usize = *(&input[counter..subcounter].parse().unwrap_or(0));
+        let word = &input[subcounter + 1..subcounter + 1 + word_size];
+        result.push(word);
+
+        counter = 1 + subcounter + word_size;
+    }
+
+    result
 }
 
 #[cfg(test)]
@@ -414,6 +473,26 @@ mod tests {
 
         let answer = is_valid_parentheses("{{[]})".to_string());
         assert_eq!(answer, false);
+    }
+
+    #[test]
+    fn test_encode() {
+        let answer = encode(vec!["kek", "lol", "lil", "pip"]);
+        assert_eq!(answer, String::from("3#kek3#lol3#lil3#pip"));
+
+        let answer = encode(vec![""]);
+        assert_eq!(answer, String::from("0#"));
+    }
+
+    #[test]
+    fn test_decode() {
+        let mock_value = String::from("3#lol3#kek3#pip");
+        let answer = decode(&mock_value);
+        assert_eq!(answer, vec!["lol", "kek", "pip"]);
+
+        let mock_value = String::from("0#");
+        let answer = decode(&mock_value);
+        assert_eq!(answer, vec![""]);
     }
 }
 
