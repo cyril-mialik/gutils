@@ -110,6 +110,35 @@ pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
     vec![]
 }
 
+/// Return a major element of a vector.
+/// Where the major is the element that appears more than ⌊n / 2⌋ time.
+///
+/// # Examples
+///
+/// ```
+/// use gutils::collections::find_majority_element;
+///
+/// let answer = find_majority_element(vec![3,2,3]);
+/// assert_eq!(answer, 3);
+///
+/// let answer = find_majority_element(vec![1, 2, 3]);
+/// assert_eq!(answer, -1);
+/// ```
+pub fn find_majority_element(nums: Vec<i32>) -> i32 {
+    let mut hm = HashMap::new();
+    let m_num = (nums.len() / 2 + 1) as i32;
+
+    for n in nums {
+        hm.entry(n).and_modify(|c| *c += 1).or_insert(1);
+
+        if hm.get(&n).unwrap() >= &m_num {
+            return n;
+        }
+    }
+
+    -1
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -151,5 +180,14 @@ mod tests {
 
         let answer = two_sum(vec![1, 2, 3, 5], 9);
         assert_eq!(answer, vec![]);
+    }
+
+    #[test]
+    fn test_find_majority_element() {
+        let answer = find_majority_element(vec![3,2,3]);
+        assert_eq!(answer, 3);
+
+        let answer = find_majority_element(vec![1, 2, 3]);
+        assert_eq!(answer, -1);
     }
 }
